@@ -28,7 +28,7 @@ net_connect.disconnect()
 
 # Create temporary directory
 temporary_folder = tempfile.TemporaryDirectory()
-
+print("temp folder: ", temporary_folder)
 
 print("git clone---------->")
 # Clone Git Repo
@@ -36,25 +36,29 @@ subprocess.call(
     f"cd {temporary_folder.name} && git clone {git_repo_url} . && del *.*", shell=True
 )
 
-print("write file---------->")
-# Write all config to file
-with open(f"{temporary_folder.name}/{device['host']}_config.txt", "w") as outfile:
-    outfile.write(device_config)
 
-# Git commit all changes
-print("git add---------->")
-subprocess.call(
-    f"cd {temporary_folder.name} && git add -A",
-    shell=True,
-)
-print("git commit---------->")
-subprocess.call(f"cd {temporary_folder.name} && git commit -m '{commit_message}'",
-                shell=True,
-                )
-print("git push---------->")
-subprocess.call(f"cd {temporary_folder.name} && git push",
-                shell=True,
-                )
 
-# Delete temporary directory
-temporary_folder.cleanup()
+
+
+# print("write file---------->")
+# # Write all config to file
+# with open(f"{temporary_folder.name}/{device['host']}_config.txt", "w") as outfile:
+#     outfile.write(device_config)
+#
+# # Git commit all changes
+# print("git add---------->")
+# subprocess.call(
+#     f"cd {temporary_folder.name} && git add -A",
+#     shell=True,
+# )
+# print("git commit---------->")
+# subprocess.call(f"cd {temporary_folder.name} && git commit -m '{commit_message}'",
+#                 shell=True,
+#                 )
+# print("git push---------->")
+# subprocess.call(f"cd {temporary_folder.name} && git push",
+#                 shell=True,
+#                 )
+#
+# # Delete temporary directory
+# #temporary_folder.cleanup()
