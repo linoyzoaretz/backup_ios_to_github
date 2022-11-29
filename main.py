@@ -1,4 +1,6 @@
+import time
 import tempfile
+import os
 import subprocess
 from netmiko import ConnectHandler
 
@@ -27,38 +29,42 @@ net_connect.disconnect()
 # ------ Clone git repo in temporary directory, replace files with new config file and push changes back to git repo  ------
 
 # Create temporary directory
-temporary_folder = tempfile.TemporaryDirectory()
+temporary_folder = "C:/Users/Linoy/AppData/Local/Temp/backups_GIT"
 print("temp folder: ", temporary_folder)
 
 print("git clone---------->")
 # Clone Git Repo
-subprocess.call(
-    f"cd {temporary_folder.name} && git clone {git_repo_url} . && del *.*", shell=True
-)
+subprocess.call(f"cd{temporary_folder} && git clone {git_repo_url}", shell=True
+                )
+# git init (needed?)
 
+print("write file---------->")
+# Write all config to file
+with open(f"{temporary_folder}/{device['host']}_config_5.txt", "w") as outfile:
+    outfile.write(device_config)
 
+print("git add---------->")
+subprocess.call(f"cd {temporary_folder} && git add *.txt",
+                shell=True,
+                )
 
+time.sleep(5)
 
+print("git commit---------->")
+subprocess.call(f"cd {temporary_folder} && git commit -o *.txt -m 'commit config file'",
+                shell=True,
+                )
+subprocess.call(f"cd {temporary_folder} && git status",
+                shell=True,
+                )
 
-# print("write file---------->")
-# # Write all config to file
-# with open(f"{temporary_folder.name}/{device['host']}_config.txt", "w") as outfile:
-#     outfile.write(device_config)
-#
-# # Git commit all changes
-# print("git add---------->")
-# subprocess.call(
-#     f"cd {temporary_folder.name} && git add -A",
-#     shell=True,
-# )
-# print("git commit---------->")
-# subprocess.call(f"cd {temporary_folder.name} && git commit -m '{commit_message}'",
-#                 shell=True,
-#                 )
 # print("git push---------->")
-# subprocess.call(f"cd {temporary_folder.name} && git push",
-#                 shell=True,
-#                 )
-#
-# # Delete temporary directory
-# #temporary_folder.cleanup()
+# subprocess.call(f"cd {temporary_folder} && git push -u -f origin master",
+#                shell=True,
+#                )
+
+# remove file with absolute path
+# os.remove("C:/Users/Linoy/AppData/Local/Temp/backups_GIT/*.txt")
+
+# Delete temporary directory
+# temporary_folder.cleanup()
